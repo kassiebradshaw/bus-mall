@@ -4,17 +4,18 @@
 let totalClicks = 0;
 let clicksAllowed = 25;
 let allProducts = [];
+let productArray = [];
+let uniqueImageCount = 6;
 let imageOne = document.querySelector('section img:first-child');
 let imageTwo = document.querySelector('section img:nth-child(2)');
 let imageThree = document.querySelector('section img:nth-child(3)');
 let myContainer = document.querySelector('section');
-let myButton = document.querySelector('div');
 
 function Product(name, fileExtension = 'jpg') {
   this.name = name;
   this.src = `img/${name}.${fileExtension}`;
   this.views = 0;
-  this.clicks =0;
+  this.clicks = 0;
   allProducts.push(this);
 }
 
@@ -43,13 +44,11 @@ function getRandomIndex() {
   return Math.floor(Math.random() * allProducts.length);
 }
 
-
-let productArray = [];
 function renderProducts() {
-  while (productArray.length < 6) {
+  while (productArray.length < uniqueImageCount) {
     let randomNumber = getRandomIndex();
-    while (!productArray.includes(randomNumber)){
-      productArray.push(randomNumber);
+    while (!productArray.includes(randomNumber)) {
+      productArray.unshift(randomNumber);
     }
   }
 
@@ -70,14 +69,14 @@ function renderProducts() {
   allProducts[thirdProduct].views++;
 }
 
-function renderResults() {
-  let myList = document.querySelector('ul');
-  for (let i = 0; i < allProducts.length; i++) {
-    let li = document.createElement('li');
-    li.textContent = `${allProducts[i].name} had ${allProducts[i].clicks} votes, and was seen ${allProducts[i].views} times`;
-    myList.appendChild(li);
-  }
-}
+// function renderResults() {
+//   let myList = document.querySelector('ul');
+//   for (let i = 0; i < allProducts.length; i++) {
+//     let li = document.createElement('li');
+//     li.textContent = `${allProducts[i].name} had ${allProducts[i].clicks} votes, and was seen ${allProducts[i].views} times`;
+//     myList.appendChild(li);
+//   }
+// }
 
 function handleClick(event) {
   if (event.target === myContainer) {
@@ -87,7 +86,7 @@ function handleClick(event) {
   totalClicks++;
   let productClicked = event.target.title;
 
-  for (let i=0; i < allProducts.length; i++) {
+  for (let i = 0; i < allProducts.length; i++) {
     if (productClicked === allProducts[i].name) {
       allProducts[i].clicks++;
     }
@@ -96,16 +95,67 @@ function handleClick(event) {
   renderProducts();
   if (totalClicks === clicksAllowed) {
     myContainer.removeEventListener('click', handleClick);
+    renderChart();
   }
 }
 
-function handleButtonClick(event) {
-  if(totalClicks === clicksAllowed) {
-    renderResults();
-  }
-}
+// function handleButtonClick(event) {
+//   if(totalClicks === clicksAllowed) {
+//     renderResults();
+//   }
+// }
 
 renderProducts();
 
+function renderChart() {
+
+  let productNames = [];
+  let productViews = [];
+  let productClicks = [];
+  for (let i = 0; i < allProducts.length; i++) {
+    productNames.push(allProducts[i].name);
+    productViews.push(allProducts[i].views);
+    productClicks.push(allProducts[i].clicks);
+  }
+
+  var ctx = document.getElementById('myChart');
+  Chart.defaults.global.defaultFontColor = 'black';
+  Chart.defaults.global.defaultFontSize = 20;
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: '# of Views',
+        data: productViews,
+        backgroundColor: 'rgba(255, 206, 86, 1)',
+        borderColor: 'rgba(0, 0, 0, 1)',
+        borderWidth: 2.5,
+        barThickness: 18,
+      },
+      {
+        label: '# of Clicks',
+        data: productClicks,
+        backgroundColor: 'rgba(75, 192, 192, 1)',
+        borderColor: 'rgba(0, 0, 0, 1)',
+        borderWidth: 2.5,
+        barThickness: 18,
+      }]
+    },
+    options: {
+      fontSize: 20,
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
 myContainer.addEventListener('click', handleClick);
-myButton.addEventListener('click', handleButtonClick);
+// myButton.addEventListener('click', handleButtonClick);
