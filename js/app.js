@@ -10,7 +10,7 @@ let imageThree = document.querySelector('section img:nth-child(3)');
 let myContainer = document.querySelector('section');
 let myButton = document.querySelector('div');
 
-function Product(name, fileExtension) {
+function Product(name, fileExtension = 'jpg') {
   this.name = name;
   this.src = `img/${name}.${fileExtension}`;
   this.views = 0;
@@ -18,57 +18,56 @@ function Product(name, fileExtension) {
   allProducts.push(this);
 }
 
-new Product('bag', 'jpg');
-new Product('banana', 'jpg');
-new Product('bathroom', 'jpg');
-new Product('boots', 'jpg');
-new Product('breakfast', 'jpg');
-new Product('bubblegum', 'jpg');
-new Product('chair', 'jpg');
-new Product('cthulhu', 'jpg');
-new Product('dog-duck', 'jpg');
-new Product('dragon', 'jpg');
-new Product('pen', 'jpg');
-new Product('pet-sweep', 'jpg');
-new Product('scissors', 'jpg');
-new Product('shark', 'jpg');
+new Product('bag');
+new Product('banana');
+new Product('bathroom');
+new Product('boots');
+new Product('breakfast');
+new Product('bubblegum');
+new Product('chair');
+new Product('cthulhu');
+new Product('dog-duck');
+new Product('dragon');
+new Product('pen');
+new Product('pet-sweep');
+new Product('scissors');
+new Product('shark');
 new Product('sweep', 'png');
-new Product('tauntaun', 'jpg');
-new Product('unicorn', 'jpg');
+new Product('tauntaun');
+new Product('unicorn');
 new Product('usb', 'gif');
-new Product('water-can', 'jpg');
-new Product('wine-glass', 'jpg');
+new Product('water-can');
+new Product('wine-glass');
 
 function getRandomIndex() {
   return Math.floor(Math.random() * allProducts.length);
 }
 
+
+let productArray = [];
 function renderProducts() {
-  let productArray = [];
-  productArray[0] = getRandomIndex();
-  productArray[1] = getRandomIndex();
-  productArray[2] = getRandomIndex();
-  while (productArray[0] === productArray[1]) {
-    productArray[1] = getRandomIndex();
-  }
-  while (productArray[0] === productArray[2]) {
-    productArray[2] = getRandomIndex();
-  }
-  while (productArray[1] === productArray[2]) {
-    productArray[2] = getRandomIndex();
+  while (productArray.length < 6) {
+    let randomNumber = getRandomIndex();
+    while (!productArray.includes(randomNumber)){
+      productArray.push(randomNumber);
+    }
   }
 
-  imageOne.src = allProducts[productArray[0]].src;
-  imageOne.title = allProducts[productArray[0]].name;
-  allProducts[productArray[0]].views++;
+  let firstProduct = productArray.pop();
+  let secondProduct = productArray.pop();
+  let thirdProduct = productArray.pop();
 
-  imageTwo.src = allProducts[productArray[1]].src;
-  imageTwo.title = allProducts[productArray[1]].name;
-  allProducts[productArray[1]].views++;
+  imageOne.src = allProducts[firstProduct].src;
+  imageOne.title = allProducts[firstProduct].name;
+  allProducts[firstProduct].views++;
 
-  imageThree.src = allProducts[productArray[2]].src;
-  imageThree.title = allProducts[productArray[2]].name;
-  allProducts[productArray[2]].views++;
+  imageTwo.src = allProducts[secondProduct].src;
+  imageTwo.title = allProducts[secondProduct].name;
+  allProducts[secondProduct].views++;
+
+  imageThree.src = allProducts[thirdProduct].src;
+  imageThree.title = allProducts[thirdProduct].name;
+  allProducts[thirdProduct].views++;
 }
 
 function renderResults() {
