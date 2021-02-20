@@ -1,6 +1,5 @@
 'use strict';
 
-// global variables
 let totalClicks = 0;
 let clicksAllowed = 25;
 let allProducts = [];
@@ -19,26 +18,33 @@ function Product(name, fileExtension = 'jpg') {
   allProducts.push(this);
 }
 
-new Product('bag');
-new Product('banana');
-new Product('bathroom');
-new Product('boots');
-new Product('breakfast');
-new Product('bubblegum');
-new Product('chair');
-new Product('cthulhu');
-new Product('dog-duck');
-new Product('dragon');
-new Product('pen');
-new Product('pet-sweep');
-new Product('scissors');
-new Product('shark');
-new Product('sweep', 'png');
-new Product('tauntaun');
-new Product('unicorn');
-new Product('usb', 'gif');
-new Product('water-can');
-new Product('wine-glass');
+let retrieveProducts = localStorage.getItem('products'); 
+
+if (retrieveProducts) {
+  let parsedProducts = JSON.parse(retrieveProducts);
+  allProducts = parsedProducts;
+} else {
+  new Product('bag');
+  new Product('banana');
+  new Product('bathroom');
+  new Product('boots');
+  new Product('breakfast');
+  new Product('bubblegum');
+  new Product('chair');
+  new Product('cthulhu');
+  new Product('dog-duck');
+  new Product('dragon');
+  new Product('pen');
+  new Product('pet-sweep');
+  new Product('scissors');
+  new Product('shark');
+  new Product('sweep', 'png');
+  new Product('tauntaun');
+  new Product('unicorn');
+  new Product('usb', 'gif');
+  new Product('water-can');
+  new Product('wine-glass');
+}
 
 function getRandomIndex() {
   return Math.floor(Math.random() * allProducts.length);
@@ -69,15 +75,6 @@ function renderProducts() {
   allProducts[thirdProduct].views++;
 }
 
-// function renderResults() {
-//   let myList = document.querySelector('ul');
-//   for (let i = 0; i < allProducts.length; i++) {
-//     let li = document.createElement('li');
-//     li.textContent = `${allProducts[i].name} had ${allProducts[i].clicks} votes, and was seen ${allProducts[i].views} times`;
-//     myList.appendChild(li);
-//   }
-// }
-
 function handleClick(event) {
   if (event.target === myContainer) {
     alert('Please click an image and FOLLOW INSTRUCTIONS');
@@ -97,13 +94,11 @@ function handleClick(event) {
     myContainer.removeEventListener('click', handleClick);
     renderChart();
   }
-}
 
-// function handleButtonClick(event) {
-//   if(totalClicks === clicksAllowed) {
-//     renderResults();
-//   }
-// }
+  let stringifiedProducts = JSON.stringify(allProducts);
+
+  localStorage.setItem('products', stringifiedProducts);
+}
 
 renderProducts();
 
@@ -158,4 +153,3 @@ function renderChart() {
 }
 
 myContainer.addEventListener('click', handleClick);
-// myButton.addEventListener('click', handleButtonClick);
