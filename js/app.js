@@ -1,5 +1,5 @@
 'use strict';
-
+// global variables
 let totalClicks = 0;
 let clicksAllowed = 25;
 let allProducts = [];
@@ -10,6 +10,7 @@ let imageTwo = document.querySelector('section img:nth-child(2)');
 let imageThree = document.querySelector('section img:nth-child(3)');
 let myContainer = document.querySelector('section');
 
+// constructor function for each product
 function Product(name, fileExtension = 'jpg') {
   this.name = name;
   this.src = `img/${name}.${fileExtension}`;
@@ -18,7 +19,9 @@ function Product(name, fileExtension = 'jpg') {
   allProducts.push(this);
 }
 
+// accesses local storage to get the stored products
 let retrieveProducts = localStorage.getItem('products'); 
+
 
 if (retrieveProducts) {
   let parsedProducts = JSON.parse(retrieveProducts);
@@ -46,10 +49,12 @@ if (retrieveProducts) {
   new Product('wine-glass');
 }
 
+// randomly generates a number between/including 1 and the length of the array of products
 function getRandomIndex() {
   return Math.floor(Math.random() * allProducts.length);
 }
 
+// generates an array to render product images on page and queue up next round of images
 function renderProducts() {
   while (productArray.length < uniqueImageCount) {
     let randomNumber = getRandomIndex();
@@ -75,6 +80,7 @@ function renderProducts() {
   allProducts[thirdProduct].views++;
 }
 
+// event handler
 function handleClick(event) {
   if (event.target === myContainer) {
     alert('Please click an image and FOLLOW INSTRUCTIONS');
@@ -88,8 +94,8 @@ function handleClick(event) {
       allProducts[i].clicks++;
     }
   }
-
   renderProducts();
+
   if (totalClicks === clicksAllowed) {
     myContainer.removeEventListener('click', handleClick);
     renderChart();
@@ -113,6 +119,7 @@ function renderChart() {
     productClicks.push(allProducts[i].clicks);
   }
 
+  // creates chart with chartjs
   var ctx = document.getElementById('myChart');
   Chart.defaults.global.defaultFontColor = 'black';
   Chart.defaults.global.defaultFontSize = 20;
@@ -152,4 +159,5 @@ function renderChart() {
   });
 }
 
+// event listener
 myContainer.addEventListener('click', handleClick);
